@@ -2,7 +2,8 @@ from nextcord.ext import commands
 import requests, json, random, datetime, asyncio
 from PIL import Image, ImageFont, ImageDraw
 import textwrap
-from nextcord import File
+from nextcord import File, ButtonStyle
+from nextcord.ui import Button, View
 
 links = json.load(open("gifs.json"))
 
@@ -84,6 +85,22 @@ async def speak(ctx, *args):
 		img = File(f)
 		await ctx.channel.send(file=img)
 	
+
+@bot.command(name='support')
+async def support(ctx):
+	hi = Button(label="click me", style=ButtonStyle.blurple)
+	subscribe = Button(label="subscribe", url="https://www.youtube.com/channel/UCqRLiT8Kv5RVmoNtnshKZwA?sub_confirmation=1")
+
+	async def hi_callback(interaction):
+		await interaction.response.send_message("Hello!")
+
+	hi.callback = hi_callback
+
+	myview = View(timeout=180)
+	myview.add_item(hi)
+	myview.add_item(subscribe)
+	
+	await ctx.send("hi", view=myview)
 
 @bot.event
 async def on_ready():
